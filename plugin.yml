@@ -1,0 +1,7 @@
+name: NovaCoreGameEnginePlus
+main: net.novauniversee.novacore.gameengine.plus.NovaGameEnginePlus
+description: MORE FEATURES
+version: 1.0
+api-version: 1.13
+depend: [NovaCore, NovaCoreGameEngine]
+loadbefore: [NovaGamesTarget]
