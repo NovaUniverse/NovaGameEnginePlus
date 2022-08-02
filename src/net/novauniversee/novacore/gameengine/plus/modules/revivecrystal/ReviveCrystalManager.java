@@ -65,7 +65,7 @@ public class ReviveCrystalManager extends NovaModule implements Listener {
 
 	public void showUI(Player player, Location location) {
 		if (location.getBlockY() < VersionIndependentUtils.get().getMinY() + 4) {
-			player.sendMessage(ChatColor.RED + "You need to place the crystal higher up in");
+			player.sendMessage(ChatColor.RED + "You need to place the crystal higher up");
 			return;
 		}
 

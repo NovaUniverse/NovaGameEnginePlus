@@ -223,8 +223,8 @@ public class ReviveCrystalEffect {
 			player.teleport(respawnLocation);
 			player.setGameMode(GameMode.SURVIVAL);
 			VersionIndependentUtils.get().sendTitle(player, ChatColor.GREEN + "Respawned", "", 0, 40, 20);
-			team.sendMessage(ChatColor.GREEN + player.getName() + " was respawned");
-			team.getOnlinePlayers().forEach(p -> VersionIndependentSound.NOTE_PLING.play(p));
+			Bukkit.getServer().broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD + team.getDisplayName() + " sucessfully respawned " + player.getName() + " with a respawn crystal");
+			VersionIndependentSound.NOTE_PLING.broadcast();
 
 			Event event = new ReviveCrystalRespawnPlayerEvent(player);
 			Bukkit.getServer().getPluginManager().callEvent(event);

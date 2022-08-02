@@ -1,6 +1,7 @@
 package net.novauniversee.novacore.gameengine.plus.customitem.revivecrystal;
 
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -54,7 +55,14 @@ public class ReviveCrystalItem extends CustomItem {
 							if (event.getAction() == Action.RIGHT_CLICK_AIR) {
 								event.getPlayer().sendMessage(ChatColor.GREEN + "Right click on the ground to revive a team member");
 							} else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-								ReviveCrystalManager.getInstance().showUI(event.getPlayer(), event.getClickedBlock().getLocation().clone().add(0D, 1D, 0D));
+								Block block = event.getClickedBlock();
+								
+								if(!block.getType().isSolid()) {
+									event.getPlayer().sendMessage(ChatColor.RED + "You can only place the revive crystal on solid blocks");
+									return;
+								}
+								
+								ReviveCrystalManager.getInstance().showUI(event.getPlayer(), block.getLocation().clone().add(0D, 1D, 0D));
 							}
 						}
 					}
