@@ -20,6 +20,7 @@ import net.zeeraa.novacore.spigot.utils.ItemBuilder;
 import xyz.xenondevs.particle.ParticleEffect;
 
 public class SmokeGrenade extends CustomItem {
+	// net.novauniversee.novacore.gameengine.plus.customitem.smokebomb.SmokeGrenade
 	public static final String TEXTURE = "ewogICJ0aW1lc3RhbXAiIDogMTYzODAyMDQxNzgzNSwKICAicHJvZmlsZUlkIiA6ICJhMjk1ODZmYmU1ZDk0Nzk2OWZjOGQ4ZGE0NzlhNDNlZSIsCiAgInByb2ZpbGVOYW1lIiA6ICJWaWVydGVsdG9hc3RpaWUiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTUzZTViYWRiMmM3MzRjMWUyMmRkMGY0M2JhMmE5NmQyM2VkYzJjZDE2ZmRhMjEwOTViMTdmYjA4Y2ZjZjY0ZCIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9";
 	public static final int DURATION = 5;
 	public static final double RADIUS = 4;
@@ -38,7 +39,7 @@ public class SmokeGrenade extends CustomItem {
 		builder.setName(ChatColor.GREEN + "Smoke Grenade");
 		builder.setAmount(1);
 		builder.addLore("Right click to temporary blind players");
-		builder.addLore("in a " + SmokeGrenade.RADIUS + " block radius");
+		builder.addLore("in a " + ((int) SmokeGrenade.RADIUS) + " block radius");
 
 		return builder.build();
 	}
