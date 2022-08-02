@@ -138,7 +138,7 @@ public class ReviveCrystalEffect {
 			return;
 		}
 
-		getTeam().getOnlinePlayers().forEach(p -> VersionIndependentSound.WITHER_HURT.play(player));
+		VersionIndependentSound.WITHER_HURT.playAtLocation(location);
 		VersionIndependentUtils.get().sendTitle(player, "", ChatColor.RED + "Respawning failed", 0, 40, 20);
 		this.remove();
 	}

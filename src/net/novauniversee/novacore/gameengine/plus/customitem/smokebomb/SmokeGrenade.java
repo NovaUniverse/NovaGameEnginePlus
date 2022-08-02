@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -83,7 +84,7 @@ public class SmokeGrenade extends CustomItem {
 
 			VersionIndependentSound.FIZZ.playAtLocation(finalLocation, 1F, 0.5F);
 
-			Bukkit.getServer().getOnlinePlayers().stream().filter(p -> p.getWorld().equals(finalLocation.getWorld())).filter(p -> p.getLocation().distance(finalLocation) < RADIUS).forEach(player -> {
+			Bukkit.getServer().getOnlinePlayers().stream().filter(p -> p.getGameMode() != GameMode.SPECTATOR).filter(p -> p.getWorld().equals(finalLocation.getWorld())).filter(p -> p.getLocation().distance(finalLocation) < RADIUS).forEach(player -> {
 				player.sendMessage(ChatColor.GRAY + "Blinded by smoke grenade");
 				player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * DURATION, 0));
 			});

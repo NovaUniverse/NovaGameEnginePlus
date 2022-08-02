@@ -18,10 +18,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryType.SlotType;
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
@@ -35,6 +35,10 @@ import net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils;
 import net.zeeraa.novacore.spigot.abstraction.enums.ColoredBlockType;
 import net.zeeraa.novacore.spigot.abstraction.enums.NovaCoreGameVersion;
 import net.zeeraa.novacore.spigot.gameengine.module.modules.game.GameManager;
+import net.zeeraa.novacore.spigot.gameengine.module.modules.game.MapGame;
+import net.zeeraa.novacore.spigot.gameengine.module.modules.game.events.GameEndEvent;
+import net.zeeraa.novacore.spigot.gameengine.module.modules.game.events.GameStartEvent;
+import net.zeeraa.novacore.spigot.gameengine.module.modules.game.events.TeamEliminatedEvent;
 import net.zeeraa.novacore.spigot.module.NovaModule;
 import net.zeeraa.novacore.spigot.module.annotations.NovaAutoLoad;
 import net.zeeraa.novacore.spigot.module.modules.customitems.CustomItemManager;
@@ -54,6 +58,7 @@ public class ReviveCrystalManager extends NovaModule implements Listener {
 	private List<ReviveCrystalEffect> effects;
 	private Task task;
 	private int respawnTimeTicks;
+	private int maxY;
 
 	public static ReviveCrystalManager getInstance() {
 		return instance;
@@ -67,6 +72,13 @@ public class ReviveCrystalManager extends NovaModule implements Listener {
 		if (location.getBlockY() < VersionIndependentUtils.get().getMinY() + 4) {
 			player.sendMessage(ChatColor.RED + "You need to place the crystal higher up");
 			return;
+		}
+
+		if (maxY > 0) {
+			if (location.getBlockY() > maxY) {
+				player.sendMessage(ChatColor.RED + "Crystal is too high up");
+				return;
+			}
 		}
 
 		if (!isLocationOk(location)) {
@@ -212,11 +224,20 @@ public class ReviveCrystalManager extends NovaModule implements Listener {
 		this.respawnTimeTicks = respawnTimeTicks;
 	}
 
+	public int getMaxY() {
+		return maxY;
+	}
+
+	public void setMaxY(int maxY) {
+		this.maxY = maxY;
+	}
+
 	@Override
 	public void onLoad() {
 		ReviveCrystalManager.instance = this;
 
 		respawnTimeTicks = 1200;
+		maxY = -1;
 		reviveLocations = new HashMap<UUID, Location>();
 		effects = new ArrayList<ReviveCrystalEffect>();
 		task = new SimpleTask(getPlugin(), new Runnable() {
@@ -266,15 +287,25 @@ public class ReviveCrystalManager extends NovaModule implements Listener {
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = false)
 	public void onEntityDamage(EntityDamageEvent e) {
 		if (e.getCause() == DamageCause.ENTITY_EXPLOSION) {
-			if (VersionIndependentUtils.get().getNovaCoreGameVersion() == NovaCoreGameVersion.V_1_8) {
-				return;
+			if (VersionIndependentUtils.get().getNovaCoreGameVersion() != NovaCoreGameVersion.V_1_8) {
+				this.effects.stream().filter(ef -> ef.getWorld().equals(e.getEntity().getWorld())).forEach(effect -> {
+					if (e.getEntity().getLocation().distance(effect.getFireworkLocation()) < 7) {
+						e.setCancelled(true);
+					}
+				});
 			}
+		}
 
-			this.effects.stream().filter(ef -> ef.getWorld().equals(e.getEntity().getWorld())).forEach(effect -> {
-				if (e.getEntity().getLocation().distance(effect.getFireworkLocation()) < 7) {
+		if (!e.isCancelled()) {
+			if (e.getEntity() instanceof ArmorStand) {
+				ReviveCrystalEffect effect = effects.stream().filter(ef -> ef.getArmorStand().equals(e.getEntity())).findFirst().orElse(null);
+				if (effect != null) {
+					Log.trace("ReviveCrystal", "Preventing armor stand destruction");
 					e.setCancelled(true);
+					effect.getArmorStand().remove();
+					Bukkit.getServer().broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + effect.getPlayer().getName() + "'s respawn crystal was broken");
 				}
-			});
+			}
 		}
 	}
 
@@ -289,23 +320,50 @@ public class ReviveCrystalManager extends NovaModule implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = false)
-	public void onEntityDamage(EntityDeathEvent e) {
-		if (e.getEntity() instanceof ArmorStand) {
-			if (effects.stream().filter(effect -> effect.getArmorStand().equals(e.getEntity())).count() > 0) {
-				Log.trace("ReviveCrystal", "Preventing armor stand interact event");
-				e.getDrops().clear();
-			}
-		}
-	}
-
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent e) {
 		if (e.getRightClicked() instanceof ArmorStand) {
 			if (effects.stream().filter(effect -> effect.getArmorStand().equals(e.getRightClicked())).count() > 0) {
-				Log.trace("ReviveCrystal", "Preventing armor stand from dropping items");
+				Log.trace("ReviveCrystal", "Preventing armor stand interact");
 				e.setCancelled(true);
 			}
 		}
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerArmorStandManipulate(PlayerArmorStandManipulateEvent e) {
+		if (e.getRightClicked() instanceof ArmorStand) {
+			if (effects.stream().filter(effect -> effect.getArmorStand().equals(e.getRightClicked())).count() > 0) {
+				e.setCancelled(true);
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onGameStart(GameStartEvent e) {
+		if (e.getGame() instanceof MapGame) {
+			MapGame game = (MapGame) e.getGame();
+			if (game.getActiveMap().getMapData().hasMapModule(ReviveCrystalConfig.class)) {
+				ReviveCrystalConfig config = (ReviveCrystalConfig) game.getActiveMap().getMapData().getMapModule(ReviveCrystalConfig.class);
+
+				if (config.getRespawnTime() > 0) {
+					this.respawnTimeTicks = config.getRespawnTime() * 20;
+				}
+
+				if (config.getMaxY() > 0) {
+					this.maxY = config.getMaxY();
+				}
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onTeamEliminated(TeamEliminatedEvent e) {
+		effects.stream().filter(effect -> effect.getTeam().equals(e.getTeam())).forEach(effect -> effect.remove());
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onGameEnd(GameEndEvent e) {
+		effects.forEach(effect -> effect.remove());
 	}
 }
