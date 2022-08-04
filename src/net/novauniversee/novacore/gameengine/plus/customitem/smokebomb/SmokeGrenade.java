@@ -47,47 +47,49 @@ public class SmokeGrenade extends CustomItem {
 
 	@Override
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (VersionIndependentUtils.get().isInteractEventMainHand(event)) {
-			Location location = event.getPlayer().getLocation();
-			if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-				location = event.getClickedBlock().getLocation().clone().add(0D, 1D, 0D);
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			if (VersionIndependentUtils.get().isInteractEventMainHand(event)) {
+				Location location = event.getPlayer().getLocation();
+				if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+					location = event.getClickedBlock().getLocation().clone().add(0D, 1D, 0D);
+				}
+
+				ItemStack item = VersionIndependentUtils.get().getItemInMainHand(event.getPlayer());
+				if (item == null) {
+					return;
+				}
+
+				if (!CustomItemManager.getInstance().isCustomItem(item)) {
+					return;
+				}
+
+				if (!CustomItemManager.getInstance().isType(item, SmokeGrenade.class)) {
+					return;
+				}
+
+				if (item.getAmount() > 1) {
+					item.setAmount(item.getAmount() - 1);
+				} else {
+					VersionIndependentUtils.get().setItemInMainHand(event.getPlayer(), ItemBuilder.AIR);
+				}
+
+				final Location finalLocation = location;
+
+				for (int i = 0; i < PARTICLE_COUNT; i++) {
+					double xOffset = ((random.nextDouble() * 2) - 1D) * RADIUS;
+					double yOffset = random.nextDouble() * RADIUS;
+					double zOffset = ((random.nextDouble() * 2) - 1D) * RADIUS;
+
+					ParticleEffect.SMOKE_LARGE.display(location.clone().add(xOffset, yOffset, zOffset));
+				}
+
+				VersionIndependentSound.FIZZ.playAtLocation(finalLocation, 1F, 0.5F);
+
+				Bukkit.getServer().getOnlinePlayers().stream().filter(p -> p.getGameMode() != GameMode.SPECTATOR).filter(p -> p.getWorld().equals(finalLocation.getWorld())).filter(p -> p.getLocation().distance(finalLocation) < RADIUS).forEach(player -> {
+					player.sendMessage(ChatColor.GRAY + "Blinded by smoke grenade");
+					player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * DURATION, 0));
+				});
 			}
-
-			ItemStack item = VersionIndependentUtils.get().getItemInMainHand(event.getPlayer());
-			if (item == null) {
-				return;
-			}
-
-			if (!CustomItemManager.getInstance().isCustomItem(item)) {
-				return;
-			}
-
-			if (!CustomItemManager.getInstance().isType(item, SmokeGrenade.class)) {
-				return;
-			}
-
-			if (item.getAmount() > 1) {
-				item.setAmount(item.getAmount() - 1);
-			} else {
-				VersionIndependentUtils.get().setItemInMainHand(event.getPlayer(), ItemBuilder.AIR);
-			}
-
-			final Location finalLocation = location;
-
-			for (int i = 0; i < PARTICLE_COUNT; i++) {
-				double xOffset = ((random.nextDouble() * 2) - 1D) * RADIUS;
-				double yOffset = random.nextDouble() * RADIUS;
-				double zOffset = ((random.nextDouble() * 2) - 1D) * RADIUS;
-
-				ParticleEffect.SMOKE_LARGE.display(location.clone().add(xOffset, yOffset, zOffset));
-			}
-
-			VersionIndependentSound.FIZZ.playAtLocation(finalLocation, 1F, 0.5F);
-
-			Bukkit.getServer().getOnlinePlayers().stream().filter(p -> p.getGameMode() != GameMode.SPECTATOR).filter(p -> p.getWorld().equals(finalLocation.getWorld())).filter(p -> p.getLocation().distance(finalLocation) < RADIUS).forEach(player -> {
-				player.sendMessage(ChatColor.GRAY + "Blinded by smoke grenade");
-				player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * DURATION, 0));
-			});
 		}
 	}
 }
