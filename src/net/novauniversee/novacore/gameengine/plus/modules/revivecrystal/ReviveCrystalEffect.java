@@ -20,6 +20,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import net.novauniversee.novacore.gameengine.plus.NovaGameEnginePlus;
 import net.novauniversee.novacore.gameengine.plus.customitem.revivecrystal.ReviveCrystalItem;
@@ -30,6 +32,7 @@ import net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils;
 import net.zeeraa.novacore.spigot.abstraction.enums.ColoredBlockType;
 import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentSound;
 import net.zeeraa.novacore.spigot.gameengine.module.modules.game.GameManager;
+import net.zeeraa.novacore.spigot.gameengine.module.modules.game.MapGame;
 import net.zeeraa.novacore.spigot.module.modules.lootdrop.particles.LootdropParticleEffect;
 import net.zeeraa.novacore.spigot.teams.Team;
 import net.zeeraa.novacore.spigot.utils.ItemBuilder;
@@ -225,6 +228,21 @@ public class ReviveCrystalEffect {
 			VersionIndependentUtils.get().sendTitle(player, ChatColor.GREEN + "Respawned", "", 0, 40, 20);
 			Bukkit.getServer().broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD + team.getDisplayName() + " sucessfully respawned " + player.getName() + " with a respawn crystal");
 			VersionIndependentSound.NOTE_PLING.broadcast();
+			
+			player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 20 * 20, 1), true);
+			player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 10, 2), true);
+			
+			if(GameManager.getInstance().hasGame()) {
+				if(GameManager.getInstance().getActiveGame() instanceof MapGame) {
+					MapGame game =(MapGame) GameManager.getInstance().getActiveGame();
+					if(game.hasActiveMap()) {
+						if(game.getActiveMap().getMapData().hasMapModule(ReviveCrystalLoadout.class)) {
+							ReviveCrystalLoadout loadout = (ReviveCrystalLoadout) game.getActiveMap().getMapData().getMapModule(ReviveCrystalLoadout.class);
+							loadout.apply(player);
+						}
+					}
+				}
+			}
 
 			Event event = new ReviveCrystalRespawnPlayerEvent(player);
 			Bukkit.getServer().getPluginManager().callEvent(event);
