@@ -29,6 +29,7 @@ public class ReviveCrystalLoadout extends MapModule {
 		chestplate = null;
 		leggings = null;
 		boots = null;
+		
 		items = new ArrayList<>();
 
 		if (json.has("helmet")) {

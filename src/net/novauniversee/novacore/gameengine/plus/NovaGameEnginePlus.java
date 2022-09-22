@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.novauniversee.novacore.gameengine.plus.customitem.revivecrystal.ReviveCrystalItem;
 import net.novauniversee.novacore.gameengine.plus.customitem.smokebomb.SmokeGrenade;
 import net.novauniversee.novacore.gameengine.plus.modules.revivecrystal.ReviveCrystalConfig;
+import net.novauniversee.novacore.gameengine.plus.modules.revivecrystal.ReviveCrystalLoadout;
 import net.novauniversee.novacore.gameengine.plus.modules.revivecrystal.ReviveCrystalManager;
 import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.spigot.gameengine.module.modules.game.map.mapmodule.MapModuleManager;
@@ -35,6 +36,7 @@ public class NovaGameEnginePlus extends JavaPlugin {
 		ModuleManager.scanForModules(this, "net.novauniversee.novacore.gameengine.plus.modules");
 
 		MapModuleManager.addMapModule("novagameengineplus.revivecrystal.config", ReviveCrystalConfig.class);
+		MapModuleManager.addMapModule("novagameengineplus.revivecrystal.loadout", ReviveCrystalLoadout.class);
 		
 		try {
 			CustomItemManager.getInstance().addCustomItem(ReviveCrystalItem.class);
