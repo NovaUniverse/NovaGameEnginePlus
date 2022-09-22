@@ -65,7 +65,7 @@ public class ReviveCrystalLoadout extends MapModule {
 		}
 
 		if (json.has("items")) {
-			JSONArray itemsJson = new JSONArray();
+			JSONArray itemsJson = json.getJSONArray("items");
 			for (int i = 0; i < itemsJson.length(); i++) {
 				JSONObject item = itemsJson.getJSONObject(i);
 				try {
