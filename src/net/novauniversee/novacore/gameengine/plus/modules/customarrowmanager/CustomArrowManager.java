@@ -193,7 +193,6 @@ public class CustomArrowManager extends NovaModule implements Listener {
 
 	@EventHandler
 	public void onProjectileHit(ProjectileHitEvent e) {
-		Log.trace(e.toString());
 		if (wrappedCustomArrows.stream().anyMatch(wa -> wa.getArrow().getUniqueId().equals(e.getEntity().getUniqueId()))) {
 			WrappedCustomArrow wca = wrappedCustomArrows.stream().filter(wa -> wa.getArrow().getUniqueId().equals(e.getEntity().getUniqueId())).findFirst().orElse(null);
 
