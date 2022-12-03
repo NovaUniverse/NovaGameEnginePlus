@@ -7,6 +7,8 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.novauniversee.novacore.gameengine.plus.customitem.arrows.explosivearrow.ExplosiveArrowItem;
+import net.novauniversee.novacore.gameengine.plus.customitem.arrows.shockdart.ShockDartItem;
 import net.novauniversee.novacore.gameengine.plus.customitem.revivecrystal.ReviveCrystalItem;
 import net.novauniversee.novacore.gameengine.plus.customitem.smokebomb.SmokeGrenade;
 import net.novauniversee.novacore.gameengine.plus.modules.revivecrystal.ReviveCrystalConfig;
@@ -41,6 +43,9 @@ public class NovaGameEnginePlus extends JavaPlugin {
 		try {
 			CustomItemManager.getInstance().addCustomItem(ReviveCrystalItem.class);
 			CustomItemManager.getInstance().addCustomItem(SmokeGrenade.class);
+			
+			CustomItemManager.getInstance().addCustomItem(ShockDartItem.class);
+			CustomItemManager.getInstance().addCustomItem(ExplosiveArrowItem.class);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			Log.error("NovaGameEnginePlus", "Failed to register custom items");
 			e.printStackTrace();
