@@ -3,3 +3,11 @@ RegisterReviveCrystalRecipe: false
 
 # Time in seconds for revive crystal effect
 ReviveCrystalTime: 60
+
+# ItemsAdder Config
+ItemsAdder:
+    Enabled: false
+    ExplosiveArrowItem: ""
+    ShockArrowItem: ""
+    SmokeGrenadeItem: ""
+    ReviveCrystalItem: ""

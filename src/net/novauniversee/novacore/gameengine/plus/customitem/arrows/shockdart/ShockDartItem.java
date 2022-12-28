@@ -15,6 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import net.novauniversee.novacore.gameengine.plus.NovaGameEnginePlus;
 import net.novauniversee.novacore.gameengine.plus.customitem.arrows.CustomArrow;
 import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.commons.utils.RandomGenerator;
@@ -62,7 +63,7 @@ public class ShockDartItem extends CustomArrow {
 					Log.trace("ShockDart", "Inflicting damage and slowness to " + player.getName() + " since they are in the shock radius. dist: " + distance);
 					player.damage(4D);
 				} else {
-					//Log.trace("ShockDart", player.getName() + " is outside the radius");
+					// Log.trace("ShockDart", player.getName() + " is outside the radius");
 				}
 			}
 		});
@@ -75,6 +76,15 @@ public class ShockDartItem extends CustomArrow {
 			Log.trace("ShockDart", "Direct hit on entity " + entity.getName());
 			((LivingEntity) entity).damage(2D);
 			((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 80, 0, false, false), true);
+		}
+	}
+
+	@Override
+	public ItemBuilder initItemBuilder() {
+		if (NovaGameEnginePlus.getInstance().getItemsAdderConfig().isEnabled() && NovaGameEnginePlus.getInstance().getItemsAdderConfig().hasShockArrowItem()) {
+			return ItemBuilder.fromItemsAdderNamespace(NovaGameEnginePlus.getInstance().getItemsAdderConfig().getShockArrowItem());
+		} else {
+			return super.initItemBuilder();
 		}
 	}
 }

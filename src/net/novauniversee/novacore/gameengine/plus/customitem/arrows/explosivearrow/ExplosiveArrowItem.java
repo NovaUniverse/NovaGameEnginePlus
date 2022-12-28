@@ -6,6 +6,8 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import net.novauniversee.novacore.gameengine.plus.NovaGameEnginePlus;
 import net.novauniversee.novacore.gameengine.plus.customitem.arrows.CustomArrow;
 import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.spigot.utils.ItemBuilder;
@@ -26,5 +28,14 @@ public class ExplosiveArrowItem extends CustomArrow {
 		Log.trace("ExplosiveArrow", "onHitAnything() location: " + arrow.getLocation() + " shooter: " + shooter.toString());
 
 		arrow.getLocation().getWorld().createExplosion(arrow.getLocation(), 1.5F, true);
+	}
+
+	@Override
+	public ItemBuilder initItemBuilder() {
+		if (NovaGameEnginePlus.getInstance().getItemsAdderConfig().isEnabled() && NovaGameEnginePlus.getInstance().getItemsAdderConfig().hasExplosiveArrowItem()) {
+			return ItemBuilder.fromItemsAdderNamespace(NovaGameEnginePlus.getInstance().getItemsAdderConfig().getExplosiveArrowItem());
+		} else {
+			return super.initItemBuilder();
+		}
 	}
 }

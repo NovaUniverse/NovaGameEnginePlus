@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
+import net.novauniversee.novacore.gameengine.plus.NovaGameEnginePlus;
 import net.novauniversee.novacore.gameengine.plus.modules.revivecrystal.ReviveCrystalManager;
 import net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils;
 import net.zeeraa.novacore.spigot.gameengine.module.modules.game.GameManager;
@@ -23,7 +24,13 @@ public class ReviveCrystalItem extends CustomItem {
 
 	@Override
 	protected ItemStack createItemStack(Player player) {
-		ItemBuilder builder = ItemBuilder.getPlayerSkullWithBase64TextureAsBuilder(ReviveCrystalItem.TEXTURE);
+		ItemBuilder builder;
+
+		if (NovaGameEnginePlus.getInstance().getItemsAdderConfig().isEnabled() && NovaGameEnginePlus.getInstance().getItemsAdderConfig().hasReviveCrystalItem()) {
+			builder = ItemBuilder.fromItemsAdderNamespace(NovaGameEnginePlus.getInstance().getItemsAdderConfig().getReviveCrystalItem());
+		} else {
+			builder = ItemBuilder.getPlayerSkullWithBase64TextureAsBuilder(ReviveCrystalItem.TEXTURE);
+		}
 
 		builder.setName(ChatColor.AQUA + "Revive Crystal");
 
@@ -56,12 +63,12 @@ public class ReviveCrystalItem extends CustomItem {
 								event.getPlayer().sendMessage(ChatColor.GREEN + "Right click on the ground to revive a team member");
 							} else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 								Block block = event.getClickedBlock();
-								
-								if(!block.getType().isSolid()) {
+
+								if (!block.getType().isSolid()) {
 									event.getPlayer().sendMessage(ChatColor.RED + "You can only place the revive crystal on solid blocks");
 									return;
 								}
-								
+
 								ReviveCrystalManager.getInstance().showUI(event.getPlayer(), block.getLocation().clone().add(0D, 1D, 0D));
 							}
 						}

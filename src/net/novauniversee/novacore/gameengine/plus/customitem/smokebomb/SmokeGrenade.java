@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import net.novauniversee.novacore.gameengine.plus.NovaGameEnginePlus;
 import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentSound;
 import net.zeeraa.novacore.spigot.module.modules.customitems.consumable.AllowedHand;
 import net.zeeraa.novacore.spigot.module.modules.customitems.consumable.ConsumableCustomItem;
@@ -38,11 +39,11 @@ public class SmokeGrenade extends ConsumableCustomItem {
 	public boolean canUseItem(Player player) {
 		return true;
 	}
-	
+
 	@Override
 	public boolean onItemConsume(Player player, PlayerInteractEvent event) {
 		event.setCancelled(true);
-		
+
 		Location location = event.getPlayer().getLocation();
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			location = event.getClickedBlock().getLocation().clone().add(0D, 1D, 0D);
@@ -70,7 +71,13 @@ public class SmokeGrenade extends ConsumableCustomItem {
 
 	@Override
 	protected ItemStack createItemStack(Player player) {
-		ItemBuilder builder = new ItemBuilder(ItemBuilder.getPlayerSkullWithBase64Texture(SmokeGrenade.TEXTURE));
+		ItemBuilder builder;
+
+		if (NovaGameEnginePlus.getInstance().getItemsAdderConfig().isEnabled() && NovaGameEnginePlus.getInstance().getItemsAdderConfig().hasSmokeGrenadeItem()) {
+			builder = ItemBuilder.fromItemsAdderNamespace(NovaGameEnginePlus.getInstance().getItemsAdderConfig().getSmokeGrenadeItem());
+		} else {
+			builder = new ItemBuilder(ItemBuilder.getPlayerSkullWithBase64Texture(SmokeGrenade.TEXTURE));
+		}
 
 		builder.setName(ChatColor.GREEN + "Smoke Grenade");
 		builder.setAmount(1);

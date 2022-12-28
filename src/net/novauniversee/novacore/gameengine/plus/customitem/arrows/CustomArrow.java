@@ -18,7 +18,7 @@ import net.zeeraa.novacore.spigot.utils.ItemBuilder;
 public abstract class CustomArrow extends CustomItem {
 	@Override
 	protected ItemStack createItemStack(@Nullable Player player) {
-		ItemBuilder builder = new ItemBuilder(Material.ARROW);
+		ItemBuilder builder = this.initItemBuilder();
 
 		builder.setName(ChatColor.RED + "ERR:NAME_NOT_SET");
 		builder.setAmount(1);
@@ -33,6 +33,10 @@ public abstract class CustomArrow extends CustomItem {
 		this.addItemStackAttributes(item, player);
 
 		return item;
+	}
+
+	public ItemBuilder initItemBuilder() {
+		return new ItemBuilder(Material.ARROW);
 	}
 
 	protected boolean addEnchantedEffect() {
