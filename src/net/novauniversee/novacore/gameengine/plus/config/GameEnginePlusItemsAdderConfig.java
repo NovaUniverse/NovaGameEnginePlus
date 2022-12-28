@@ -34,7 +34,7 @@ public class GameEnginePlusItemsAdderConfig {
 		return enabled;
 	}
 	
-	public void setenabled(boolean enabled) {
+	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
 	
