@@ -135,7 +135,7 @@ public class ReviveCrystalManager extends NovaModule implements Listener {
 
 				builder.setName(ChatColor.GREEN + "Revive " + p2.getName());
 				builder.setAmount(1);
-				builder.addLore("Click to revice " + player.getName() + ". You need to defend");
+				builder.addLore("Click to revive " + player.getName() + ". You need to defend");
 				builder.addLore("the revive beam until it reaches the ground");
 
 				inventory.setItem(slot, builder.build());
