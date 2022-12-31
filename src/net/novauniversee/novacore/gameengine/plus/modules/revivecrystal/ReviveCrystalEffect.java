@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
@@ -23,6 +22,7 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import net.md_5.bungee.api.ChatColor;
 import net.novauniversee.novacore.gameengine.plus.NovaGameEnginePlus;
 import net.novauniversee.novacore.gameengine.plus.customitem.revivecrystal.ReviveCrystalItem;
 import net.zeeraa.novacore.commons.log.Log;
@@ -35,6 +35,8 @@ import net.zeeraa.novacore.spigot.gameengine.module.modules.game.GameManager;
 import net.zeeraa.novacore.spigot.gameengine.module.modules.game.MapGame;
 import net.zeeraa.novacore.spigot.module.modules.lootdrop.particles.LootdropParticleEffect;
 import net.zeeraa.novacore.spigot.teams.Team;
+import net.zeeraa.novacore.spigot.teams.TeamManager;
+import net.zeeraa.novacore.spigot.utils.ChatColorRGBMapper;
 import net.zeeraa.novacore.spigot.utils.ItemBuilder;
 import net.zeeraa.novacore.spigot.utils.LocationUtils;
 
@@ -205,13 +207,15 @@ public class ReviveCrystalEffect {
 		}
 
 		if (ticksLeft <= 0) {
+			Color fireworkColor = ChatColorRGBMapper.chatColorToRGBColorData(TeamManager.getTeamManager().tryGetPlayerTeamColor(player, ChatColor.BLUE)).toBukkitColor();
+
 			Location respawnLocation = location.clone().add(0D, 1D, 0D);
 			fireworkLocation = respawnLocation;
 			Firework fw = (Firework) this.location.getWorld().spawnEntity(respawnLocation, EntityType.FIREWORK);
 			FireworkMeta fwm = fw.getFireworkMeta();
 
 			fwm.setPower(1);
-			fwm.addEffect(FireworkEffect.builder().with(Type.BALL_LARGE).withColor(Color.BLUE).trail(true).flicker(true).build());
+			fwm.addEffect(FireworkEffect.builder().with(Type.BALL_LARGE).withColor(fireworkColor).trail(true).flicker(true).build());
 
 			fw.setFireworkMeta(fwm);
 
@@ -228,15 +232,15 @@ public class ReviveCrystalEffect {
 			VersionIndependentUtils.get().sendTitle(player, ChatColor.GREEN + "Respawned", "", 0, 40, 20);
 			Bukkit.getServer().broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD + team.getDisplayName() + " sucessfully respawned " + player.getName() + " with a respawn crystal");
 			VersionIndependentSound.NOTE_PLING.broadcast();
-			
+
 			player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 20 * 20, 1), true);
 			player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 10, 2), true);
-			
-			if(GameManager.getInstance().hasGame()) {
-				if(GameManager.getInstance().getActiveGame() instanceof MapGame) {
-					MapGame game =(MapGame) GameManager.getInstance().getActiveGame();
-					if(game.hasActiveMap()) {
-						if(game.getActiveMap().getMapData().hasMapModule(ReviveCrystalLoadout.class)) {
+
+			if (GameManager.getInstance().hasGame()) {
+				if (GameManager.getInstance().getActiveGame() instanceof MapGame) {
+					MapGame game = (MapGame) GameManager.getInstance().getActiveGame();
+					if (game.hasActiveMap()) {
+						if (game.getActiveMap().getMapData().hasMapModule(ReviveCrystalLoadout.class)) {
 							ReviveCrystalLoadout loadout = (ReviveCrystalLoadout) game.getActiveMap().getMapData().getMapModule(ReviveCrystalLoadout.class);
 							loadout.apply(player);
 						}
