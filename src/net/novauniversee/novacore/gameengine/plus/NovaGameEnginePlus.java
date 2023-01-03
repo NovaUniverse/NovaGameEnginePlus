@@ -39,7 +39,7 @@ public class NovaGameEnginePlus extends JavaPlugin {
 		
 		ModuleManager.require(CustomItemManager.class);
 		ModuleManager.require(GUIManager.class);
-
+		
 		ModuleManager.scanForModules(this, "net.novauniversee.novacore.gameengine.plus.modules");
 
 		MapModuleManager.addMapModule("novagameengineplus.revivecrystal.config", ReviveCrystalConfig.class);

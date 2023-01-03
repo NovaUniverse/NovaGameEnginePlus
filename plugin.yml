@@ -3,5 +3,5 @@ main: net.novauniversee.novacore.gameengine.plus.NovaGameEnginePlus
 description: MORE FEATURES
 version: 1.0
 api-version: 1.13
-depend: [NovaCore, NovaCoreGameEngine]
+depend: [NovaCore, NovaCoreGameEngine, HolographicDisplays]
 loadbefore: [NovaGamesTarget]
