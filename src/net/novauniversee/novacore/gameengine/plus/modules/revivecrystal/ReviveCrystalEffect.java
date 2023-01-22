@@ -33,6 +33,7 @@ import net.zeeraa.novacore.spigot.abstraction.enums.ColoredBlockType;
 import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentSound;
 import net.zeeraa.novacore.spigot.gameengine.module.modules.game.GameManager;
 import net.zeeraa.novacore.spigot.gameengine.module.modules.game.MapGame;
+import net.zeeraa.novacore.spigot.module.modules.lootdrop.DefaultFireworkSparkLootdropEffectProvider;
 import net.zeeraa.novacore.spigot.module.modules.lootdrop.particles.LootdropParticleEffect;
 import net.zeeraa.novacore.spigot.teams.Team;
 import net.zeeraa.novacore.spigot.teams.TeamManager;
@@ -87,7 +88,7 @@ public class ReviveCrystalEffect {
 
 		Log.trace(location.toString());
 
-		this.particleEffect = new LootdropParticleEffect(this.location.clone().add(0D, 1.5D, 0D));
+		this.particleEffect = new LootdropParticleEffect(this.location.clone().add(0D, 1.5D, 0D), new DefaultFireworkSparkLootdropEffectProvider());
 
 		VersionIndependentSound.NOTE_PLING.broadcast();
 		Bukkit.getServer().broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + team.getDisplayName() + " is respawning " + player.getName() + " at X: " + location.getBlockX() + " Y: " + location.getBlockZ());

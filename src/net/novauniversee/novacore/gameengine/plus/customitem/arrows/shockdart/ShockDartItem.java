@@ -1,6 +1,5 @@
 package net.novauniversee.novacore.gameengine.plus.customitem.arrows.shockdart;
 
-import java.awt.Color;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -19,9 +18,10 @@ import net.novauniversee.novacore.gameengine.plus.NovaGameEnginePlus;
 import net.novauniversee.novacore.gameengine.plus.customitem.arrows.CustomArrow;
 import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.commons.utils.RandomGenerator;
+import net.zeeraa.novacore.spigot.NovaCore;
 import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentSound;
+import net.zeeraa.novacore.spigot.abstraction.particle.NovaDustOptions;
 import net.zeeraa.novacore.spigot.utils.ItemBuilder;
-import xyz.xenondevs.particle.ParticleEffect;
 
 public class ShockDartItem extends CustomArrow {
 	private Random random;
@@ -50,7 +50,7 @@ public class ShockDartItem extends CustomArrow {
 			double z = RandomGenerator.generateDouble(-2.5D, 2.5D, random);
 
 			Location particleLocation = arrow.getLocation().clone().add(x, y, z);
-			ParticleEffect.REDSTONE.display(particleLocation, Color.BLUE);
+			NovaCore.getInstance().getNovaParticleProvider().showRedstoneParticle(particleLocation, NovaDustOptions.BLUE);
 
 			VersionIndependentSound.FIZZ.playAtLocation(particleLocation);
 		}

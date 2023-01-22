@@ -14,12 +14,13 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.novauniversee.novacore.gameengine.plus.NovaGameEnginePlus;
+import net.zeeraa.novacore.spigot.NovaCore;
 import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentSound;
+import net.zeeraa.novacore.spigot.abstraction.particle.NovaParticleEffect;
 import net.zeeraa.novacore.spigot.module.modules.customitems.consumable.AllowedHand;
 import net.zeeraa.novacore.spigot.module.modules.customitems.consumable.ConsumableCustomItem;
 import net.zeeraa.novacore.spigot.module.modules.customitems.consumable.RegisteredClickType;
 import net.zeeraa.novacore.spigot.utils.ItemBuilder;
-import xyz.xenondevs.particle.ParticleEffect;
 
 public class SmokeGrenade extends ConsumableCustomItem {
 	// net.novauniversee.novacore.gameengine.plus.customitem.smokebomb.SmokeGrenade
@@ -56,7 +57,8 @@ public class SmokeGrenade extends ConsumableCustomItem {
 			double yOffset = random.nextDouble() * RADIUS;
 			double zOffset = ((random.nextDouble() * 2) - 1D) * RADIUS;
 
-			ParticleEffect.SMOKE_LARGE.display(location.clone().add(xOffset, yOffset, zOffset));
+			NovaCore.getInstance().getNovaParticleProvider().showParticle(location.clone().add(xOffset, yOffset, zOffset), NovaParticleEffect.SMOKE_LARGE);
+			//ParticleEffect.SMOKE_LARGE.display(location.clone().add(xOffset, yOffset, zOffset));
 		}
 
 		VersionIndependentSound.FIZZ.playAtLocation(finalLocation, 1F, 0.5F);
