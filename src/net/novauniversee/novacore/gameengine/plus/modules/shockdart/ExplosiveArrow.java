@@ -1,16 +1,15 @@
 package net.novauniversee.novacore.gameengine.plus.modules.shockdart;
 
-import java.awt.Color;
-
 import org.bukkit.event.Listener;
 import net.novauniversee.novacore.gameengine.plus.NovaGameEnginePlus;
 import net.novauniversee.novacore.gameengine.plus.customitem.arrows.explosivearrow.ExplosiveArrowItem;
 import net.novauniversee.novacore.gameengine.plus.modules.customarrowmanager.CustomArrowManager;
 import net.zeeraa.novacore.commons.tasks.Task;
+import net.zeeraa.novacore.spigot.NovaCore;
+import net.zeeraa.novacore.spigot.abstraction.particle.NovaDustOptions;
 import net.zeeraa.novacore.spigot.module.NovaModule;
 import net.zeeraa.novacore.spigot.module.annotations.NovaAutoLoad;
 import net.zeeraa.novacore.spigot.tasks.SimpleTask;
-import xyz.xenondevs.particle.ParticleEffect;
 
 @NovaAutoLoad(shouldEnable = true)
 public class ExplosiveArrow extends NovaModule implements Listener {
@@ -21,7 +20,7 @@ public class ExplosiveArrow extends NovaModule implements Listener {
 
 		this.particleTask = new SimpleTask(NovaGameEnginePlus.getInstance(), () -> {
 			CustomArrowManager.getInstance().getWrappedCustomArrows().stream().filter(wca -> (wca.getType() instanceof ExplosiveArrowItem)).forEach(wca -> {
-				ParticleEffect.REDSTONE.display(wca.getArrow().getLocation(), Color.RED);
+				NovaCore.getInstance().getNovaParticleProvider().showRedstoneParticle(wca.getArrow().getLocation(), NovaDustOptions.RED);
 			});
 		}, 4L);
 	}
