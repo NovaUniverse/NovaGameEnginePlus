@@ -20,7 +20,7 @@ public class ExplosiveArrow extends NovaModule implements Listener {
 
 		this.particleTask = new SimpleTask(NovaGameEnginePlus.getInstance(), () -> {
 			CustomArrowManager.getInstance().getWrappedCustomArrows().stream().filter(wca -> (wca.getType() instanceof ExplosiveArrowItem)).forEach(wca -> {
-				NovaCore.getInstance().getNovaParticleProvider().showRedstoneParticle(wca.getArrow().getLocation(), NovaDustOptions.RED);
+				NovaCore.getInstance().getNovaParticleProvider().showColoredRedstoneParticle(wca.getArrow().getLocation(), NovaDustOptions.RED);
 			});
 		}, 4L);
 	}

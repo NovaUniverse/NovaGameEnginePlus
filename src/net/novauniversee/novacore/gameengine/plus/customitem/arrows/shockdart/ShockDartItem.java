@@ -50,7 +50,7 @@ public class ShockDartItem extends CustomArrow {
 			double z = RandomGenerator.generateDouble(-2.5D, 2.5D, random);
 
 			Location particleLocation = arrow.getLocation().clone().add(x, y, z);
-			NovaCore.getInstance().getNovaParticleProvider().showRedstoneParticle(particleLocation, NovaDustOptions.BLUE);
+			NovaCore.getInstance().getNovaParticleProvider().showColoredRedstoneParticle(particleLocation, NovaDustOptions.BLUE);
 
 			VersionIndependentSound.FIZZ.playAtLocation(particleLocation);
 		}

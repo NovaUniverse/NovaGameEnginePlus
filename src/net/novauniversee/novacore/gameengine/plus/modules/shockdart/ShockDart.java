@@ -20,7 +20,7 @@ public class ShockDart extends NovaModule implements Listener {
 
 		this.particleTask = new SimpleTask(NovaGameEnginePlus.getInstance(), () -> {
 			CustomArrowManager.getInstance().getWrappedCustomArrows().stream().filter(wca -> (wca.getType() instanceof ShockDartItem)).forEach(wca -> {
-				NovaCore.getInstance().getNovaParticleProvider().showRedstoneParticle(wca.getArrow().getLocation(), NovaDustOptions.BLUE);
+				NovaCore.getInstance().getNovaParticleProvider().showColoredRedstoneParticle(wca.getArrow().getLocation(), NovaDustOptions.BLUE);
 			});
 		}, 4L);
 	}
