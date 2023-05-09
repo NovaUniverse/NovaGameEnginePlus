@@ -16,7 +16,10 @@ import net.novauniversee.novacore.gameengine.plus.modules.revivecrystal.ReviveCr
 import net.novauniversee.novacore.gameengine.plus.modules.revivecrystal.ReviveCrystalLoadout;
 import net.novauniversee.novacore.gameengine.plus.modules.revivecrystal.ReviveCrystalManager;
 import net.zeeraa.novacore.commons.log.Log;
+import net.zeeraa.novacore.spigot.gameengine.module.modules.game.GameManager;
+import net.zeeraa.novacore.spigot.gameengine.module.modules.game.MapGame;
 import net.zeeraa.novacore.spigot.gameengine.module.modules.game.map.mapmodule.MapModuleManager;
+import net.zeeraa.novacore.spigot.gameengine.module.modules.game.map.mapmodules.graceperiod.graceperiod.GracePeriodMapModule;
 import net.zeeraa.novacore.spigot.module.ModuleManager;
 import net.zeeraa.novacore.spigot.module.modules.customitems.CustomItemManager;
 import net.zeeraa.novacore.spigot.module.modules.gui.GUIManager;
@@ -30,6 +33,25 @@ public class NovaGameEnginePlus extends JavaPlugin {
 	
 	private GameEnginePlusItemsAdderConfig itemsAdderConfig;
 
+	public static boolean isGracePeriodActive() {
+		if(GameManager.getInstance().hasGame()) {
+			if(GameManager.getInstance().getActiveGame() instanceof MapGame) {
+				MapGame game = (MapGame) GameManager.getInstance().getActiveGame();
+				if(game.hasActiveMap()) {
+					if(game.getActiveMap().getMapData().hasMapModule(GracePeriodMapModule.class)) {
+						GracePeriodMapModule module = game.getActiveMap().getMapData().getMapModule(GracePeriodMapModule.class);
+						if(module != null) {
+							if(module.isActive()) {
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
 	@Override
 	public void onEnable() {
 		NovaGameEnginePlus.instance = this;

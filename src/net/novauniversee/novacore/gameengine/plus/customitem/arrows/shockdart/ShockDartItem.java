@@ -42,6 +42,10 @@ public class ShockDartItem extends CustomArrow {
 
 	@Override
 	public void onHitAnything(Arrow arrow, Location hitLocation, Player shooter) {
+		if(NovaGameEnginePlus.isGracePeriodActive()) {
+			return;
+		}
+		
 		Log.trace("ShockDart", "onHitAnything() location: " + arrow.getLocation() + " shooter: " + shooter.toString());
 
 		for (int i = 0; i < 40; i++) {
@@ -71,6 +75,10 @@ public class ShockDartItem extends CustomArrow {
 
 	@Override
 	public void onHitEntity(Arrow arrow, Entity entity, Player shooter) {
+		if(NovaGameEnginePlus.isGracePeriodActive()) {
+			return;
+		}
+		
 		Log.trace("ShockDart", "onHitEntity() entity: " + entity.toString() + " shooter: " + shooter.toString());
 		if (entity instanceof LivingEntity) {
 			Log.trace("ShockDart", "Direct hit on entity " + entity.getName());
