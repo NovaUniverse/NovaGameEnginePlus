@@ -1,4 +1,4 @@
-package net.novauniversee.novacore.gameengine.plus.modules.shockdart;
+package net.novauniversee.novacore.gameengine.plus.modules.arrows;
 
 import org.bukkit.event.Listener;
 import net.novauniversee.novacore.gameengine.plus.NovaGameEnginePlus;
