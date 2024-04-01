@@ -3,13 +3,13 @@ package net.novauniversee.novacore.gameengine.plus.modules.hologramhitmarkers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-
+import eu.decentsoftware.holograms.api.DHAPI;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
 import net.md_5.bungee.api.ChatColor;
 import net.zeeraa.novacore.commons.tasks.Task;
 import net.zeeraa.novacore.commons.utils.NumberUtils;
@@ -133,7 +133,7 @@ public class HologramHitmarkers extends NovaModule {
 
 		location.add(RandomGenerator.generateDouble(randomOffset * -1, randomOffset, random), yOffset, RandomGenerator.generateDouble(randomOffset * -1, randomOffset, random));
 
-		Hologram hologram = HologramsAPI.createHologram(getPlugin(), location);
+		Hologram hologram = DHAPI.createHologram(UUID.randomUUID().toString(), location, false); //HologramsAPI.createHologram(getPlugin(), location);
 
 		ChatColor color = ChatColor.GRAY;
 		String symbol = "";
@@ -154,11 +154,11 @@ public class HologramHitmarkers extends NovaModule {
 
 		String text = color + symbol + NumberUtils.round(damage, precision) + suffix;
 
-		hologram.appendTextLine(text);
+		DHAPI.addHologramLine(hologram, text);
 
 		if (showOnlyForDamager) {
-			hologram.getVisibilityManager().setVisibleByDefault(false);
-			hologram.getVisibilityManager().showTo(damager);
+			hologram.setDefaultVisibleState(false);
+			hologram.setShowPlayer(damager);
 		}
 
 		wrappers.add(new HitmarkerHologramWrapper(hologram, hologramLifetime, movementSpeed));
@@ -170,19 +170,22 @@ class HitmarkerHologramWrapper {
 	private int timeToLive;
 
 	private double ySpeed;
-
+	private boolean didRemove;
+	
 	public HitmarkerHologramWrapper(Hologram hologram, int timeToLive, double ySpeed) {
 		this.hologram = hologram;
 		this.timeToLive = timeToLive;
 		this.ySpeed = ySpeed;
+		this.didRemove = false;
 	}
 
 	public void destroy() {
+		this.didRemove = true;
 		hologram.delete();
 	}
 
 	public boolean isRemoved() {
-		return hologram.isDeleted();
+		return didRemove;
 	}
 
 	public void tick() {
@@ -190,7 +193,7 @@ class HitmarkerHologramWrapper {
 		if (timeToLive > 0) {
 			timeToLive--;
 
-			hologram.teleport(hologram.getLocation().clone().add(0D, ySpeed, 0D));
+			hologram.setLocation(hologram.getLocation().clone().add(0D, ySpeed, 0D));
 		} else {
 			this.destroy();
 		}
